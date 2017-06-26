@@ -34,7 +34,7 @@
       "id": "#/properties/volumes",
       "type": "object",
       "patternProperties": {
-        "^[a-zA-Z0-9._-]+$": {
+        "^[a-zA-Z0-9._-@]+$": {
           "$ref": "#/definitions/volume"
         }
       },
