@@ -1,6 +1,8 @@
 package convert
 
 import (
+	"fmt"
+
 	composetypes "github.com/docker/cli/cli/compose/types"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/pkg/errors"
@@ -34,7 +36,7 @@ func convertVolumeToMount(
 		ReadOnly:    volume.ReadOnly,
 		Consistency: mount.Consistency(volume.Consistency),
 	}
-
+	fmt.Printf("convertVolumeToMount: source=%q, target=%q\n", volume.Source, volume.Target)
 	// Anonymous volumes
 	if volume.Source == "" {
 		return result, nil
@@ -60,6 +62,11 @@ func convertVolumeToMount(
 	if !exists {
 		return result, errors.Errorf("undefined volume %q", volume.Source)
 	}
+
+	// for key, val := range stackVolume {
+	// 	fmt.Print(key)
+	// 	fmt.Println(":" + val)
+	// }
 
 	result.Source = namespace.Scope(volume.Source)
 	result.VolumeOptions = &mount.VolumeOptions{}

@@ -1,6 +1,7 @@
 package stack
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -22,6 +23,7 @@ import (
 )
 
 func deployCompose(ctx context.Context, dockerCli command.Cli, opts deployOptions) error {
+	fmt.Println("deployCompose")
 	configDetails, err := getConfigDetails(opts.composefile)
 	if err != nil {
 		return err
@@ -151,11 +153,17 @@ func buildEnvironment(env []string) (map[string]string, error) {
 }
 
 func getConfigFile(filename string) (*composetypes.ConfigFile, error) {
+	fmt.Println("getConfigFile filename=%q", filename)
 	bytes, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
 	config, err := loader.ParseYAML(bytes)
+	config_pretty, err1 := json.MarshalIndent(config, "", "  ")
+	if err1 != nil {
+		fmt.Println("error:", err1)
+	}
+	fmt.Print(string(config_pretty))
 	if err != nil {
 		return nil, err
 	}

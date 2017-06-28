@@ -1,6 +1,7 @@
 package loader
 
 import (
+	"encoding/json"
 	"fmt"
 	"path"
 	"path/filepath"
@@ -42,6 +43,7 @@ func ParseYAML(source []byte) (map[string]interface{}, error) {
 
 // Load reads a ConfigDetails and returns a fully loaded configuration
 func Load(configDetails types.ConfigDetails) (*types.Config, error) {
+	fmt.Println("Load function in compose")
 	if len(configDetails.ConfigFiles) < 1 {
 		return nil, errors.Errorf("No files specified")
 	}
@@ -192,6 +194,7 @@ func getServices(configDict map[string]interface{}) map[string]interface{} {
 }
 
 func transform(source map[string]interface{}, target interface{}) error {
+	fmt.Println("transform in loader.go")
 	data := mapstructure.Metadata{}
 	config := &mapstructure.DecoderConfig{
 		DecodeHook: mapstructure.ComposeDecodeHookFunc(
@@ -425,6 +428,12 @@ func externalVolumeError(volume, key string) error {
 // LoadVolumes produces a VolumeConfig map from a compose file Dict
 // the source Dict is not validated if directly used. Use Load() to enable validation
 func LoadVolumes(source map[string]interface{}) (map[string]types.VolumeConfig, error) {
+	fmt.Println("LoadVolumes")
+	source_pretty, err1 := json.MarshalIndent(source, "", "  ")
+	if err1 != nil {
+		fmt.Println("error:", err1)
+	}
+	fmt.Print(string(source_pretty))
 	volumes := make(map[string]types.VolumeConfig)
 	err := transform(source, &volumes)
 	if err != nil {
@@ -562,8 +571,10 @@ func transformStringSourceMap(data interface{}) (interface{}, error) {
 }
 
 func transformServiceVolumeConfig(data interface{}) (interface{}, error) {
+	fmt.Println("transformServiceVolumeConfig")
 	switch value := data.(type) {
 	case string:
+		fmt.Println("volume=%q", value)
 		return ParseVolume(value)
 	case map[string]interface{}:
 		return data, nil

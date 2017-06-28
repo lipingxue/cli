@@ -31,6 +31,7 @@ func Services(
 ) (map[string]swarm.ServiceSpec, error) {
 	result := make(map[string]swarm.ServiceSpec)
 
+	fmt.Println("Services: from compose-file types to engineAPI types")
 	services := config.Services
 	volumes := config.Volumes
 	networks := config.Networks
@@ -65,6 +66,8 @@ func Service(
 	secrets []*swarm.SecretReference,
 	configs []*swarm.ConfigReference,
 ) (swarm.ServiceSpec, error) {
+
+	fmt.Println("Service: converts a ServiceConfig into a swarm ServiceSpec")
 	name := namespace.Scope(service.Name)
 
 	endpoint, err := convertEndpointSpec(service.Deploy.EndpointMode, service.Ports)

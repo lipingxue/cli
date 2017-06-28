@@ -1,6 +1,7 @@
 package loader
 
 import (
+	"fmt"
 	"strings"
 	"unicode"
 	"unicode/utf8"
@@ -15,7 +16,7 @@ const endOfSpec = rune(0)
 // ParseVolume parses a volume spec without any knowledge of the target platform
 func ParseVolume(spec string) (types.ServiceVolumeConfig, error) {
 	volume := types.ServiceVolumeConfig{}
-
+	fmt.Println("ParseVolume spec=%s", spec)
 	switch len(spec) {
 	case 0:
 		return volume, errors.New("invalid empty volume spec")
